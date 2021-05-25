@@ -2,7 +2,7 @@
 
 ## install
 
-need opencv lib
+need opencv lib  ( built for windows10 64bit )
 > https://drive.google.com/file/d/16mYwkPFpR6qylUwowlw_6BQsPEGka9ON/view?usp=sharing
 
 Environment Variable setting  
