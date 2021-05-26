@@ -46,6 +46,7 @@ public class MainScript : MonoBehaviour
     void Start()
     {
         string get_env = System.Environment.GetEnvironmentVariable("OPENCV_DIR");
+        //string get_env = "C:\\opencv_build";
         string face_cascade_file = get_env + "\\data\\haarcascades\\haarcascade_frontalface_alt.xml";
         sr = imgObj.GetComponent<SpriteRenderer>();
         int res;
