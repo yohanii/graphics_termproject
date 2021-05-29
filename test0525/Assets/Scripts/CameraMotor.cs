@@ -17,7 +17,7 @@ public class CameraMotor : MonoBehaviour
 
     private float transition = 0.0f;
     private float animationDuration = 3.0f;
-    private Vector3 animationOffset = new Vector3(0, 5, 5);
+    private Vector3 animationOffset = new Vector3(0, 4, 3);
 
 
     private int cur_frame_pos, last_frame_pos = -1;
@@ -27,10 +27,10 @@ public class CameraMotor : MonoBehaviour
     private float[] rot_angles = new float[] { 0.0f };
     private int rot_len = 1;
     private float timer = 0.0f;
-    private float wait_time = 0.2f;
-    private Vector2 pers_ratio = new Vector2(0.03f, 0.03f);
+    private float wait_time = 0.3f;
+    private Vector3 pers_ratio = new Vector3(0.02f, 0.02f, 0.02f);
     private Vector3 cam_pos;
-    private float face_cx, face_cy;
+    private float face_cx, face_cy, face_width, face_height;
 
     [DllImport("OpenCVDLL_face")]
     private static extern void FlipImage(ref Color32[] rawImage, int width, int height);
@@ -87,9 +87,18 @@ public class CameraMotor : MonoBehaviour
         if (transition > 1.0f)
         {
             float dx, dy, dz;
-            dx = (cam_width * 0.5f - face_cx) * pers_ratio.x;
-            dy = (cam_height * 0.5f - face_cy) * pers_ratio.y;
+            dx = 0.0f;
+            dy = 0.0f;
             dz = 0.0f;
+            if (fr.w != 0)
+            {
+                face_cx = fr.x + fr.w * 0.5f;
+                face_cy = fr.y + fr.h * 0.5f;
+
+                dx = (cam_width * 0.5f - face_cx) * pers_ratio.x;
+                dy = (cam_height * 0.5f - face_cy) * pers_ratio.y;
+                dz = (fr.w - face_width) *pers_ratio.z;
+            }
             cam_pos.x = moveVector.x + dx;
             cam_pos.y = moveVector.y + dy;
             cam_pos.z = moveVector.z + dz;
@@ -97,6 +106,15 @@ public class CameraMotor : MonoBehaviour
         }
         else
         {
+            if (fr.w != 0)
+            {
+                face_width = fr.w;
+            }
+            if (fr.h != 0)
+            {
+                face_height = fr.h;
+            }
+
             //Animation at the start of the game
             transform.position = Vector3.Lerp(moveVector + animationOffset, moveVector, transition);
             transition += Time.deltaTime * 1 / animationDuration;
