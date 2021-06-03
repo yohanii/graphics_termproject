@@ -17,7 +17,7 @@ public class ZombieMotor : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        controller.Move(new Vector3(-2.0f, 0.1f, -4.0f));
+        controller.Move(new Vector3(-2.0f, 0.1f, -3.5f));
 
     }
 

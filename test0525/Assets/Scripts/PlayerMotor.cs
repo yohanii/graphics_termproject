@@ -17,7 +17,7 @@ public class PlayerMotor : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        controller.Move(new Vector3(0.0f,0.1f, 0.0f));
+        controller.Move(new Vector3(0.0f,0.2f, 0.0f));
 
     }
 
@@ -58,7 +58,7 @@ public class PlayerMotor : MonoBehaviour
     //It is begin called every time our capsule hits something
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.point.z > transform.position.z + 0.1f || hit.gameObject.tag=="Enemy")
+        if (hit.point.z > transform.position.z + 0.1f && hit.gameObject.tag=="Enemy")
             Death();
     }
 
