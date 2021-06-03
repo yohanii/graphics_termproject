@@ -24,8 +24,6 @@ public class ZombieMotor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (isDead)
-        //   return;
 
         if (Time.time < animationDuration)
         {
@@ -34,15 +32,6 @@ public class ZombieMotor : MonoBehaviour
         }
 
         moveVector = Vector3.zero;
-
-        if (controller.isGrounded)
-        {
-            verticalVelocity = -0.5f;
-        }
-        else
-        {
-            verticalVelocity -= gravity * Time.deltaTime;
-        }
 
         //x - left and right
         moveVector.x = 0.0f;

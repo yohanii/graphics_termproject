@@ -58,8 +58,9 @@ public class PlayerMotor : MonoBehaviour
     //It is begin called every time our capsule hits something
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.point.z > transform.position.z + 0.1f && hit.gameObject.tag=="Enemy")
-            Death();
+         if (hit.point.z > transform.position.z + 0.1f && hit.gameObject.tag=="Enemy")
+             Death();
+
     }
 
     private void Death()
