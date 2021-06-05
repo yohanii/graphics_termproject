@@ -17,7 +17,7 @@ public class CameraMotor : MonoBehaviour
 
     private float transition = 0.0f;
     private float animationDuration = 3.0f;
-    private Vector3 animationOffset = new Vector3(0, 4, 3);
+    private Vector3 animationOffset = new Vector3(0.0f, 3.5f, 3.0f);
 
 
     private int cur_frame_pos, last_frame_pos = -1;
@@ -57,17 +57,22 @@ public class CameraMotor : MonoBehaviour
         //string get_env = "C:\\opencv_build";
         string face_cascade_file = get_env + "\\data\\haarcascades\\haarcascade_frontalface_alt.xml";
         int res;
+
+        face_cx = cam_width * 0.5f;
+        face_cy = cam_height * 0.5f;
+
+        lookAt = GameObject.FindGameObjectWithTag("Player").transform;
+        startOffset = transform.position - lookAt.position;
+
+
+
         res = init_capture(face_cascade_file, ref cam_width, ref cam_height, ref cam_fps);
         if (res < 0)
         {
             Debug.LogWarningFormat("[{0}] Failed .", GetType());
             return;
         }
-        face_cx = cam_width * 0.5f;
-        face_cy = cam_height * 0.5f;
-
-        lookAt = GameObject.FindGameObjectWithTag("Player").transform;
-        startOffset = transform.position - lookAt.position;
+        
 
 
     }
@@ -103,6 +108,7 @@ public class CameraMotor : MonoBehaviour
             cam_pos.y = moveVector.y + dy;
             cam_pos.z = moveVector.z + dz;
             transform.position = cam_pos;
+            //transform.LookAt(lookAt.position + Vector3.up);
         }
         else
         {

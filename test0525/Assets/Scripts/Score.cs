@@ -20,11 +20,13 @@ public class Score : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (isDead)
             return;
 
         score += 2 * Time.deltaTime;
         scoreText.text = ((int)score).ToString() + "M";
+        
     }
 
     public void OnDeath()

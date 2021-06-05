@@ -12,7 +12,7 @@ public class TileManager : MonoBehaviour
     private int amnTilesOnScreen = 7;
 
     private List<GameObject> activeTiles;
-    private float safeZone = 15.0f;
+    private float safeZone = 21.0f;
     private int lastPrefabIndex = 0;
 
     // Start is called before the first frame update
@@ -25,7 +25,10 @@ public class TileManager : MonoBehaviour
             var allChildren = tile.GetComponentsInChildren<Transform>();
             foreach(Transform child in allChildren)
             {
-                child.gameObject.AddComponent<MeshCollider>();
+                if (child.gameObject.GetComponent<MeshCollider>() == null)
+                {
+                    child.gameObject.AddComponent<MeshCollider>();
+                }
             }
 
         }
@@ -47,6 +50,7 @@ public class TileManager : MonoBehaviour
             SpawnTile();
             DeleteTile();
         }
+        
     }
 
     private void SpawnTile(int prefabIndex = -1)

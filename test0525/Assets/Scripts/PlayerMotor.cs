@@ -13,11 +13,17 @@ public class PlayerMotor : MonoBehaviour
     private float gravity = 12.0f;
     private float animationDuration = 3.0f;
     private bool isDead = false;
+
+    private Rigidbody rb;
+
     // Start is called before the first frame update
     void Start()
     {
+        rb = this.GetComponent<Rigidbody>();
         controller = GetComponent<CharacterController>();
-        controller.Move(new Vector3(0.0f,0.2f, 0.0f));
+        //controller.Move(new Vector3(0.0f,0.2f, 0.0f));
+        //move to abs position
+        rb.MovePosition(new Vector3(0.0f, 0.0f, 5.0f));
 
     }
 
@@ -27,33 +33,47 @@ public class PlayerMotor : MonoBehaviour
         if(isDead)
            return;
 
-        if(Time.time < animationDuration)
+        moveVector = rb.velocity;
+        if (Time.time < animationDuration)
         {
-            controller.Move(Vector3.forward * speed * Time.deltaTime);
+            moveVector.z = speed;
+            //moveVector = Vector3.forward;
+            //controller.Move(Vector3.forward * speed * Time.deltaTime);
             return;
         }
 
-        moveVector = Vector3.zero;
+        //moveVector = Vector3.zero;
 
-        if(controller.isGrounded)
+        /*if(controller.isGrounded)
         {
             verticalVelocity = -0.5f;
         }
         else
         {
             verticalVelocity -= gravity * Time.deltaTime;
-        }
+        }*/
 
         //x - left and right
         moveVector.x = Input.GetAxisRaw("Horizontal") * speed;
         //y - up and down
-        moveVector.y = 0.0f;
+        //moveVector.y = 0.0f;
         //z - forward and backward
         moveVector.z = speed;
 
-        controller.Move(moveVector * Time.deltaTime);
+
+        //controller.Move(moveVector * Time.deltaTime);
 
     }
+    private void FixedUpdate()
+    {
+        
+        moveCharacter(moveVector);
+    }
+    void moveCharacter(Vector3 dir)
+    {
+        rb.velocity = dir;
+    }
+
 
     //It is begin called every time our capsule hits something
     private void OnControllerColliderHit(ControllerColliderHit hit)
