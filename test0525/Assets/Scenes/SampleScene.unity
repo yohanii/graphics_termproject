@@ -233,6 +233,8 @@ MonoBehaviour:
   - {fileID: 7527712997083974521, guid: 1d633cab60a40da4b8c6b2d7a9334ede, type: 3}
   - {fileID: 6462362250712359724, guid: 5fb08b7338450b34a899f6b17b5a248e, type: 3}
   - {fileID: 9154464849010161864, guid: 87b725b405b4fcd42ae1a9c5e1171eb9, type: 3}
+  - {fileID: 6879065358547781578, guid: 43fd4ebe29648cc4595433e67eb6b2ba, type: 3}
+  - {fileID: 4199712755432354755, guid: 31612fbe2d9334442990692e3f656159, type: 3}
 --- !u!4 &343059328
 Transform:
   m_ObjectHideFlags: 0
@@ -703,7 +705,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 754357790}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 30
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1485,6 +1487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c2b045fd725964bbfc934dc78ea607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tile_on: 0
 --- !u!143 &1879656602
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1516,7 +1519,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879656599}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1

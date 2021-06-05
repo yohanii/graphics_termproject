@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
 {
+    public int tile_on;
     private CharacterController controller;
     private Vector3 moveVector;
 
@@ -33,10 +34,12 @@ public class PlayerMotor : MonoBehaviour
         if(isDead)
            return;
 
-        moveVector = rb.velocity;
+        //moveVector = rb.velocity;
+        
         if (Time.time < animationDuration)
         {
-            moveVector.z = speed;
+            moveVector = transform.forward * speed;
+            //moveVector.z = speed;
             //moveVector = Vector3.forward;
             //controller.Move(Vector3.forward * speed * Time.deltaTime);
             return;
@@ -53,13 +56,23 @@ public class PlayerMotor : MonoBehaviour
             verticalVelocity -= gravity * Time.deltaTime;
         }*/
 
+
         //x - left and right
-        moveVector.x = Input.GetAxisRaw("Horizontal") * speed;
+        //moveVector.x = Input.GetAxisRaw("Horizontal") * speed;
         //y - up and down
         //moveVector.y = 0.0f;
         //z - forward and backward
-        moveVector.z = speed;
+        //moveVector.z = speed;
 
+        if (Input.GetKeyDown("a"))
+        {
+            transform.Rotate(Vector3.up, -90.0f);
+        }
+        if (Input.GetKeyDown("d"))
+        {
+            transform.Rotate(Vector3.up, 90.0f);
+        }
+        moveVector = transform.forward * speed + transform.right * Input.GetAxisRaw("Horizontal")* speed;
 
         //controller.Move(moveVector * Time.deltaTime);
 
@@ -73,12 +86,38 @@ public class PlayerMotor : MonoBehaviour
     {
         rb.velocity = dir;
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        //Debug.Log("collision Enter : " + collision.transform.parent.parent.name);
+        //go -> floor
+        // parent -> profile    
+        // parent.parent -> Tile_Normal
+        if (collision.transform.parent != null)
+        {
+            if (collision.transform.parent.parent != null)
+            {
+                if (collision.transform.parent.parent.CompareTag("Tile"))
+                {
+                    Tile_variable tv = collision.transform.parent.parent.GetComponent<Tile_variable>();
+                    tile_on = tv.tile_idx;
+                    //Debug.Log("tile_on : " + tile_on);
 
+                }
+            }
+        }
+    }
 
     //It is begin called every time our capsule hits something
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-         if (hit.point.z > transform.position.z + 0.1f && hit.gameObject.tag=="Enemy")
+        if(hit == null)
+        {
+            return;
+        }
+        
+        
+
+        if (hit.point.z > transform.position.z + 0.1f && hit.gameObject.tag=="Enemy")
              Death();
 
     }

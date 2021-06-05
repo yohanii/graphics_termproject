@@ -7,17 +7,28 @@ public class TileManager : MonoBehaviour
     public GameObject[] tilePrefabs;
 
     private Transform playerTransform;
-    private float spawnZ = -9.0f;
+    private PlayerMotor pm;
+    private float spawnForward = -9.0f;
+    private float spawnForwardOffset = 0.0f;
+    private float spawnRight = 0.0f;
+    private float tileLengthForward = 9.0f;
     private float tileLength = 9.0f;
+    private int tile_idx = 0;
+
     private int amnTilesOnScreen = 7;
+   
 
     private List<GameObject> activeTiles;
     private float safeZone = 21.0f;
+    private int spawn_gap = 3;
     private int lastPrefabIndex = 0;
 
+    private Vector3 dir;
+    private Vector3 lastPos;
     // Start is called before the first frame update
     void Start()
     {
+        pm = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMotor>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         foreach( GameObject tp in tilePrefabs)
         {
@@ -32,20 +43,24 @@ public class TileManager : MonoBehaviour
             }
 
         }
+        lastPos = new Vector3(0.0f, 0.0f, -tileLength);
+        dir = Vector3.forward;
         activeTiles = new List<GameObject>();
+        
         for (int i = 0; i < amnTilesOnScreen; i++) {
             if (i < 4)
                 SpawnTile(0);
             else
                 SpawnTile();
         }
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(playerTransform.position.z-safeZone > (spawnZ - amnTilesOnScreen * tileLength))
+        //if(playerTransform.position.z-safeZone > (spawnZ - amnTilesOnScreen * tileLength))
+        if(tile_idx - pm.tile_on <= spawn_gap)
         {
             SpawnTile();
             DeleteTile();
@@ -55,14 +70,37 @@ public class TileManager : MonoBehaviour
 
     private void SpawnTile(int prefabIndex = -1)
     {
+        float angle;
         GameObject go;
         if (prefabIndex == -1)
-            go = Instantiate(tilePrefabs[RandomPrefabIndex()]) as GameObject;
-        else
-            go = Instantiate(tilePrefabs[prefabIndex]) as GameObject;
+            prefabIndex = RandomPrefabIndex();
+
+        go = Instantiate(tilePrefabs[prefabIndex]) as GameObject;
+        go.tag = "Tile";
+        int[] param = new int[2] { tile_idx, prefabIndex };
+        go.SendMessage("SetParams", param);
+        tile_idx++;
         go.transform.SetParent(transform);
-        go.transform.position = Vector3.forward * spawnZ;
-        spawnZ += tileLength;
+
+        if (lastPrefabIndex == 4)
+        {
+            //transform.Rotate(new Vector3(0.0f, 90.0f, 0.0f));
+            dir = Quaternion.AngleAxis(-90.0f, Vector3.up) * dir;
+            //dir = Quaternion.Euler(0.0f, -90.0f, 0.0f) * dir;
+        }
+        else if (lastPrefabIndex == 5)
+        {
+            dir = Quaternion.AngleAxis(90.0f, Vector3.up) * dir;
+        }
+
+        go.transform.Rotate(Vector3.up, Vector3.Angle(Vector3.forward, dir));
+
+        go.transform.position = lastPos + dir * (tileLength);
+
+        
+        spawnForward += tileLength;
+        lastPos = go.transform.position;
+        lastPrefabIndex = prefabIndex;
         activeTiles.Add(go);
     }
     private void DeleteTile()
@@ -80,7 +118,7 @@ public class TileManager : MonoBehaviour
         {
             randomIndex = Random.Range(0,tilePrefabs.Length);
         }
-        lastPrefabIndex = randomIndex;
+        
         return randomIndex;
     }
 }

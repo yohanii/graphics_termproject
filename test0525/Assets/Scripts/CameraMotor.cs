@@ -81,13 +81,13 @@ public class CameraMotor : MonoBehaviour
     void Update()
     {
 
-        get_face_pos();
+        //get_face_pos();
 
-        moveVector = lookAt.position + startOffset;
+        moveVector = lookAt.position + Quaternion.Euler(lookAt.eulerAngles) * startOffset;
         //X
-        moveVector.x = 0;
+        //moveVector.x = 0;
         //Y
-        moveVector.y = Mathf.Clamp(moveVector.y, 3, 5);
+        //moveVector.y = Mathf.Clamp(moveVector.y, 3, 5);
         //Z
         if (transition > 1.0f)
         {
@@ -107,8 +107,9 @@ public class CameraMotor : MonoBehaviour
             cam_pos.x = moveVector.x + dx;
             cam_pos.y = moveVector.y + dy;
             cam_pos.z = moveVector.z + dz;
+            cam_pos = moveVector + Quaternion.Euler(lookAt.eulerAngles) * (new Vector3(dx, dy, dz));
             transform.position = cam_pos;
-            //transform.LookAt(lookAt.position + Vector3.up);
+            transform.LookAt(lookAt.position + Vector3.up);
         }
         else
         {
