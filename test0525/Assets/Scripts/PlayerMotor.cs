@@ -11,7 +11,7 @@ public class PlayerMotor : MonoBehaviour
     private CharacterController controller;
     private Vector3 moveVector;
 
-
+    public float life;
     private float speed = 5.0f;
     private float verticalVelocity = 0.0f;
     private float gravity = 12.0f;
@@ -30,12 +30,19 @@ public class PlayerMotor : MonoBehaviour
         //move to abs position
         rb.MovePosition(new Vector3(0.0f, 0.0f, 5.0f));
         last_tile_idx = -1;
+        life = 4.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(isDead)
+        if (life == 1.5f)
+        {
+            Death();
+        }
+
+
+        if (isDead)
            return;
 
         //moveVector = rb.velocity;
@@ -138,20 +145,13 @@ public class PlayerMotor : MonoBehaviour
                 }
             }
         }
-    }
 
-    //It is begin called every time our capsule hits something
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if(hit == null)
+        if (collision.gameObject.tag == "Enemy")
         {
-            return;
+            Debug.Log("life--");
+            life -= 0.5f;
         }
-        
-        
 
-        if (hit.point.z > transform.position.z + 0.1f && hit.gameObject.tag=="Enemy")
-             Death();
 
     }
 
