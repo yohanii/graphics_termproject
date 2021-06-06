@@ -527,10 +527,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3073980210923051196}
     m_Modifications:
-    - target: {fileID: 2016788239496913252, guid: 5e62260da1d5f5240bd8bdd62cca04db, type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3418823130319165699, guid: 5e62260da1d5f5240bd8bdd62cca04db, type: 3}
       propertyPath: m_Name
       value: obs
@@ -577,14 +573,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4834941639769510450, guid: 5e62260da1d5f5240bd8bdd62cca04db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5150219479984685293, guid: 5e62260da1d5f5240bd8bdd62cca04db, type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8865948246018044467, guid: 5e62260da1d5f5240bd8bdd62cca04db, type: 3}
-      propertyPath: m_IsKinematic
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

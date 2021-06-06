@@ -20,7 +20,7 @@ public class CameraMotor : MonoBehaviour
     private Vector3 animationOffset = new Vector3(0.0f, 3.5f, 3.0f);
 
     private Vector3 last_offset;
-    private float rot_transition = 2.0f;
+    public float rot_transition = 2.0f;
     private float rotationDuration = 1.0f;
 
     private int cur_frame_pos, last_frame_pos = -1;
@@ -35,6 +35,7 @@ public class CameraMotor : MonoBehaviour
     private Vector3 cam_pos;
     private float face_cx, face_cy, face_width, face_height;
 
+    public float dx, dy, dz;
     [DllImport("OpenCVDLL_face")]
     private static extern void FlipImage(ref Color32[] rawImage, int width, int height);
 
@@ -68,6 +69,9 @@ public class CameraMotor : MonoBehaviour
         startOffset = transform.position - lookAt.position;
 
         last_offset = startOffset;
+        dx = 0.0f;
+        dy = 0.0f;
+        dz = 0.0f;
 
         res = init_capture(face_cascade_file, ref cam_width, ref cam_height, ref cam_fps);
         if (res < 0)
@@ -81,7 +85,7 @@ public class CameraMotor : MonoBehaviour
     void Update()
     {
 
-        //get_face_pos();
+        get_face_pos();
         Vector3 cur_offset = Quaternion.Euler(lookAt.eulerAngles) * startOffset;
         //Vector3 offset_interpolate = last_offset;
 
@@ -103,6 +107,7 @@ public class CameraMotor : MonoBehaviour
         {
             moveVector = lookAt.position + cur_offset;
             last_offset = cur_offset;
+            rot_transition += Time.deltaTime * 1 / rotationDuration;
         }
         
 
@@ -113,9 +118,9 @@ public class CameraMotor : MonoBehaviour
         //Z
         if (transition > 1.0f)
         {
-            float dx, dy, dz;
-            dx = 0.0f;
-            dy = 0.0f;
+            //float dx, dy, dz;
+            //dx = 0.0f;
+            //dy = 0.0f;
             dz = 0.0f;
             if (fr.w != 0)
             {
@@ -124,11 +129,11 @@ public class CameraMotor : MonoBehaviour
 
                 dx = (cam_width * 0.5f - face_cx) * pers_ratio.x;
                 dy = (cam_height * 0.5f - face_cy) * pers_ratio.y;
-                dz = (fr.w - face_width) *pers_ratio.z;
+                //dz = (fr.w - face_width) *pers_ratio.z;
             }
-            cam_pos.x = moveVector.x + dx;
-            cam_pos.y = moveVector.y + dy;
-            cam_pos.z = moveVector.z + dz;
+            //cam_pos.x = moveVector.x + dx;
+            //cam_pos.y = moveVector.y + dy;
+            //cam_pos.z = moveVector.z + dz;
             cam_pos = moveVector + Quaternion.Euler(lookAt.eulerAngles) * (new Vector3(dx, dy, dz));
             transform.position = cam_pos;
             transform.LookAt(lookAt.position + Vector3.up);

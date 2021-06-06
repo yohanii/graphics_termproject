@@ -5,6 +5,9 @@ using UnityEngine;
 public class PlayerMotor : MonoBehaviour
 {
     public int tile_on;
+    public int tile_on_type;
+    private float tile_enter_time;
+    private int last_tile_idx;
     private CharacterController controller;
     private Vector3 moveVector;
 
@@ -16,6 +19,7 @@ public class PlayerMotor : MonoBehaviour
     private bool isDead = false;
 
     private Rigidbody rb;
+    private CameraMotor cm;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +29,7 @@ public class PlayerMotor : MonoBehaviour
         //controller.Move(new Vector3(0.0f,0.2f, 0.0f));
         //move to abs position
         rb.MovePosition(new Vector3(0.0f, 0.0f, 5.0f));
-
+        last_tile_idx = -1;
     }
 
     // Update is called once per frame
@@ -72,6 +76,30 @@ public class PlayerMotor : MonoBehaviour
         {
             transform.Rotate(Vector3.up, 90.0f);
         }
+        if(tile_on_type == 4 || tile_on_type == 5)
+        {
+            if (Time.time - tile_enter_time > 0.3)
+            {
+                cm = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMotor>();
+                // animation rotating camera  end at 1.0f, and  wait additional 2.0f;
+                if (cm.rot_transition > 2.0f)
+                {
+                    Debug.Log("tile_on_type : " + tile_on_type + " cm.dx : " + cm.dx);
+                    if (cm.dx > 2.0f)
+                    {
+                        //left
+                        transform.Rotate(Vector3.up, -90.0f);
+                    }
+                    else if (cm.dx < -2.0f)
+                    {
+                        //right
+                        transform.Rotate(Vector3.up, 90.0f);
+                    }
+                }
+            }
+        }
+        
+
         moveVector = transform.forward * speed + transform.right * Input.GetAxisRaw("Horizontal")* speed;
 
         //controller.Move(moveVector * Time.deltaTime);
@@ -100,8 +128,13 @@ public class PlayerMotor : MonoBehaviour
                 {
                     Tile_variable tv = collision.transform.parent.parent.GetComponent<Tile_variable>();
                     tile_on = tv.tile_idx;
+                    tile_on_type = tv.tile_type;
+                    if(tile_on != last_tile_idx)
+                    {
+                        tile_enter_time = Time.time;
+                    }
                     //Debug.Log("tile_on : " + tile_on);
-
+                    last_tile_idx = tile_on;
                 }
             }
         }
