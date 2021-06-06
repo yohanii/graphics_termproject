@@ -36,7 +36,7 @@ public class PlayerMotor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (life == 1.5f)
+        if (life <= 1.5f)
         {
             Death();
         }
@@ -85,20 +85,21 @@ public class PlayerMotor : MonoBehaviour
         }
         if(tile_on_type == 4 || tile_on_type == 5)
         {
-            if (Time.time - tile_enter_time > 0.3)
+            if (Time.time - tile_enter_time > 0.4)
             {
                 cm = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMotor>();
                 // animation rotating camera  end at 1.0f, and  wait additional 2.0f;
                 if (cm.rot_transition > 2.0f)
                 {
                     Debug.Log("tile_on_type : " + tile_on_type + " cm.dx : " + cm.dx);
-                    if (cm.dx > 2.0f)
+                    if (cm.dx > 1.0f)
                     {
                         //left
                         transform.Rotate(Vector3.up, -90.0f);
                     }
-                    else if (cm.dx < -2.0f)
+                    else if (cm.dx < -1.0f)
                     {
+                        
                         //right
                         transform.Rotate(Vector3.up, 90.0f);
                     }
@@ -146,13 +147,18 @@ public class PlayerMotor : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.tag == "Enemy")
+        /*if (collision.gameObject.tag == "Enemy")
         {
             Debug.Log("life--");
             life -= 0.5f;
+        }*/
+        if (collision != null)
+        {
+            if (collision.gameObject.tag == "Zombie")
+            {
+                life = 0.0f;
+            }
         }
-
-
     }
 
     private void Death()

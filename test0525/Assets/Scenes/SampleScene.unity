@@ -166,7 +166,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 0.9941834, b: 0.78679246, a: 1}
-  m_Intensity: 1.5
+  m_Intensity: 1.8
   m_Range: 100
   m_SpotAngle: 61.4
   m_InnerSpotAngle: 21.80208
@@ -467,6 +467,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4493914613880827488, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
+      propertyPath: m_TagString
+      value: Zombie
+      objectReference: {fileID: 0}
     - target: {fileID: 7389507112651452681, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -520,7 +524,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.8
   m_Range: 30
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -772,6 +776,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7756a0fb66b31b439f8c06b5589fb24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1879656604}
+  tile_on: 0
+  tile_on_type: 0
+  dist: 4.5
 --- !u!143 &754357792
 CharacterController:
   m_ObjectHideFlags: 0
@@ -816,7 +824,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -1587,6 +1595,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tile_on: 0
   tile_on_type: 0
+  life: 0
 --- !u!143 &1879656602
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1618,7 +1627,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879656599}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 30
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1649,7 +1658,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.4
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
