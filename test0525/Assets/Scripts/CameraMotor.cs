@@ -19,6 +19,9 @@ public class CameraMotor : MonoBehaviour
     private float animationDuration = 3.0f;
     private Vector3 animationOffset = new Vector3(0.0f, 3.5f, 3.0f);
 
+    private Vector3 last_offset;
+    private float rot_transition = 2.0f;
+    private float rotationDuration = 1.0f;
 
     private int cur_frame_pos, last_frame_pos = -1;
     private CvRect fr;
@@ -64,7 +67,7 @@ public class CameraMotor : MonoBehaviour
         lookAt = GameObject.FindGameObjectWithTag("Player").transform;
         startOffset = transform.position - lookAt.position;
 
-
+        last_offset = startOffset;
 
         res = init_capture(face_cascade_file, ref cam_width, ref cam_height, ref cam_fps);
         if (res < 0)
@@ -72,18 +75,37 @@ public class CameraMotor : MonoBehaviour
             Debug.LogWarningFormat("[{0}] Failed .", GetType());
             return;
         }
-        
-
-
     }
-
+    
     // Update is called once per frame
     void Update()
     {
 
         //get_face_pos();
+        Vector3 cur_offset = Quaternion.Euler(lookAt.eulerAngles) * startOffset;
+        //Vector3 offset_interpolate = last_offset;
 
-        moveVector = lookAt.position + Quaternion.Euler(lookAt.eulerAngles) * startOffset;
+        //Debug.Log("diff : " + Vector3.Angle(cur_offset, last_offset));
+        if (rot_transition > 1.0f && Vector3.Angle(cur_offset, last_offset) > 10.0f)
+        {
+            rot_transition = 0.0f;
+        }
+
+        if (rot_transition <= 1.0f)
+        {
+            Vector3  offset_interpolate = Vector3.Slerp(last_offset, cur_offset, rot_transition);
+            //Debug.Log("last : " + last_offset + " cur : " + cur_offset + " interpolate : " + offset_interpolate);
+            moveVector = lookAt.position + offset_interpolate;
+            rot_transition += Time.deltaTime * 1 / rotationDuration;
+        }
+
+        if (rot_transition > 1.0f)
+        {
+            moveVector = lookAt.position + cur_offset;
+            last_offset = cur_offset;
+        }
+        
+
         //X
         //moveVector.x = 0;
         //Y

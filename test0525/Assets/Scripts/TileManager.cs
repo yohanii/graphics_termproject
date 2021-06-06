@@ -46,20 +46,20 @@ public class TileManager : MonoBehaviour
         lastPos = new Vector3(0.0f, 0.0f, -tileLength);
         dir = Vector3.forward;
         activeTiles = new List<GameObject>();
-        SpawnTile(0);
+        /*SpawnTile(0);
         SpawnTile(0);
         SpawnTile(0);
         SpawnTile(0);
         SpawnTile(4);
         SpawnTile(5);
         SpawnTile(0);
-
-        /*for (int i = 0; i < amnTilesOnScreen; i++) {
+        */
+        for (int i = 0; i < amnTilesOnScreen; i++) {
             if (i < 4)
                 SpawnTile(0);
             else
                 SpawnTile();
-        }*/
+        }
 
     }
 
