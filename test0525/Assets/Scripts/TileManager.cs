@@ -46,13 +46,20 @@ public class TileManager : MonoBehaviour
         lastPos = new Vector3(0.0f, 0.0f, -tileLength);
         dir = Vector3.forward;
         activeTiles = new List<GameObject>();
-        
-        for (int i = 0; i < amnTilesOnScreen; i++) {
+        SpawnTile(0);
+        SpawnTile(0);
+        SpawnTile(0);
+        SpawnTile(0);
+        SpawnTile(4);
+        SpawnTile(5);
+        SpawnTile(0);
+
+        /*for (int i = 0; i < amnTilesOnScreen; i++) {
             if (i < 4)
                 SpawnTile(0);
             else
                 SpawnTile();
-        }
+        }*/
 
     }
 
@@ -79,7 +86,6 @@ public class TileManager : MonoBehaviour
         go.tag = "Tile";
         int[] param = new int[2] { tile_idx, prefabIndex };
         go.SendMessage("SetParams", param);
-        tile_idx++;
         go.transform.SetParent(transform);
 
         if (lastPrefabIndex == 4)
@@ -92,15 +98,24 @@ public class TileManager : MonoBehaviour
         {
             dir = Quaternion.AngleAxis(90.0f, Vector3.up) * dir;
         }
+       
+        
+        angle = Vector3.Angle(Vector3.forward, dir);
+        Vector3 cross = Vector3.Cross(Vector3.forward, dir);
+        if (cross.y < 0) angle = -angle;
+        // angle function not gives negative
+        //Debug.Log("tile idx : " + tile_idx + " dir : " + dir + " rotation : " + angle);
 
-        go.transform.Rotate(Vector3.up, Vector3.Angle(Vector3.forward, dir));
+        go.transform.Rotate(Vector3.up, angle);
 
         go.transform.position = lastPos + dir * (tileLength);
 
         
-        spawnForward += tileLength;
+        //spawnForward += tileLength;
         lastPos = go.transform.position;
         lastPrefabIndex = prefabIndex;
+        tile_idx++;
+
         activeTiles.Add(go);
     }
     private void DeleteTile()
