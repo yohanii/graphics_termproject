@@ -22,6 +22,7 @@ public class DeathMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (!isShowned)
             return;
         transition += Time.deltaTime;

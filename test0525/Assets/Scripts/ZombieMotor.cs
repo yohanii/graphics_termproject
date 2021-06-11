@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ZombieMotor : MonoBehaviour
 {
+    public bool stop = false;
     public Transform player;
     private CharacterController controller;
     private Vector3 moveVector;
@@ -81,7 +82,7 @@ public class ZombieMotor : MonoBehaviour
         //moveVector.z = speed;
 
         //controller.Move(moveVector * Time.deltaTime);
-        
+
         /*
         if ((Time.time - tile_enter_time) < 0.1f)
         {
@@ -108,7 +109,14 @@ public class ZombieMotor : MonoBehaviour
         }
         */
 
-        if(rotation_timer > 0.5f)
+        if (Input.GetKeyDown(KeyCode.Space) == true)
+        {
+            Debug.Log("ZOMBIE Space" + stop);
+            stop = !stop;
+            rb.isKinematic = stop;
+        }
+
+        if (rotation_timer > 0.5f)
         {
 
             Vector3 target_vec = (player.position - transform.position);
@@ -118,7 +126,7 @@ public class ZombieMotor : MonoBehaviour
             transform.Rotate(Vector3.up, angle_diff);
             */
             transform.LookAt(player.position);
-            Debug.Log("dist : " + Vector3.Magnitude(target_vec));
+           //Debug.Log("dist : " + Vector3.Magnitude(target_vec));
             if (Vector3.Magnitude(target_vec) < dist)
             {
                 speed = 4.0f;
@@ -134,16 +142,29 @@ public class ZombieMotor : MonoBehaviour
 
 
         moveVector = transform.forward * speed;
-
+        
 
     }
     private void FixedUpdate()
     {
-        moveCharacter(moveVector);
+        if (stop)
+        {
+            //moveCharacter(Vector3.zero);
+            rb.velocity = Vector3.zero;
+        }
+        else
+        {
+            moveCharacter(moveVector);
+        }
+        
     }
     void moveCharacter(Vector3 dir)
     {
+
+        //dir.y = rb.velocity.y;
+        dir.y = -Mathf.Abs(rb.velocity.y);
         rb.velocity = dir;
+
     }
     private void OnCollisionEnter(Collision collision)
     {

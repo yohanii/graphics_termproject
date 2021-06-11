@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
 {
+    public bool stop = false;
     public int tile_on;
     public int tile_on_type;
     private float tile_enter_time;
@@ -36,6 +37,16 @@ public class PlayerMotor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
+        if (Input.GetKeyDown(KeyCode.Space) == true)
+        {
+            stop = !stop;
+            rb.isKinematic = stop;
+        }
+
         if (life <= 1.5f)
         {
             Death();
@@ -92,34 +103,38 @@ public class PlayerMotor : MonoBehaviour
                 if (cm.rot_transition > 2.0f)
                 {
                     Debug.Log("tile_on_type : " + tile_on_type + " cm.dx : " + cm.dx);
-                    if (cm.dx > 1.0f)
+                    if (cm.dx > 1.5f)
+                    {
+                        //right
+                        transform.Rotate(Vector3.up, 90.0f);
+                    }
+                    else if (cm.dx < -1.5f)
                     {
                         //left
                         transform.Rotate(Vector3.up, -90.0f);
-                    }
-                    else if (cm.dx < -1.0f)
-                    {
                         
-                        //right
-                        transform.Rotate(Vector3.up, 90.0f);
                     }
                 }
             }
         }
-        
 
-        moveVector = transform.forward * speed + transform.right * Input.GetAxisRaw("Horizontal")* speed;
+
+        moveVector = (transform.forward * speed + transform.right * Input.GetAxisRaw("Horizontal") * speed);
 
         //controller.Move(moveVector * Time.deltaTime);
 
     }
     private void FixedUpdate()
     {
-        
-        moveCharacter(moveVector);
+        if (stop)
+            moveCharacter(Vector3.zero);
+        else
+            moveCharacter(moveVector);
     }
     void moveCharacter(Vector3 dir)
     {
+        //dir.y = rb.velocity.y;
+        dir.y = -Mathf.Abs(rb.velocity.y);
         rb.velocity = dir;
     }
     private void OnCollisionEnter(Collision collision)
@@ -156,7 +171,10 @@ public class PlayerMotor : MonoBehaviour
         {
             if (collision.gameObject.tag == "Zombie")
             {
-                life = 0.0f;
+                if (Vector3.Distance(collision.transform.position, this.transform.position) < 1.1)
+                {
+                    life = 0.0f;
+                }
             }
         }
     }

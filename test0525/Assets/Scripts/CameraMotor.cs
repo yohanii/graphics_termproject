@@ -39,6 +39,8 @@ public class CameraMotor : MonoBehaviour
     private float rho;
     private float theta, phi;
     private float start_angle;
+
+    public int res;
     [DllImport("OpenCVDLL_face")]
     private static extern void FlipImage(ref Color32[] rawImage, int width, int height);
 
@@ -60,11 +62,10 @@ public class CameraMotor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        string get_env = System.Environment.GetEnvironmentVariable("OPENCV_DIR");
+        //string get_env = System.Environment.GetEnvironmentVariable("OPENCV_DIR");
         //string get_env = "C:\\opencv_build";
-        string face_cascade_file = get_env + "\\data\\haarcascades\\haarcascade_frontalface_alt.xml";
-        int res;
-
+        //string face_cascade_file = get_env + "\\data\\haarcascades\\haarcascade_frontalface_alt.xml";
+        string face_cascade_file = Application.streamingAssetsPath + "\\data\\haarcascades\\haarcascade_frontalface_alt.xml";
         face_cx = cam_width * 0.5f;
         face_cy = cam_height * 0.5f;
 
@@ -78,8 +79,8 @@ public class CameraMotor : MonoBehaviour
         rho = 3.0f;
 
 
-        rot_angles = new float[] { 0.0f, -25.0f, 25.0f };
-        rot_len = 3;
+        //rot_angles = new float[] { 0.0f, -25.0f, 25.0f };
+        //rot_len = 3;
 
         res = init_capture(face_cascade_file, ref cam_width, ref cam_height, ref cam_fps);
         if (res < 0)
@@ -92,8 +93,10 @@ public class CameraMotor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        get_face_pos();
+        if (res >= 0)
+        {
+            get_face_pos();
+        }
         Vector3 cur_offset = Quaternion.Euler(lookAt.eulerAngles) * startOffset;
         //Vector3 offset_interpolate = last_offset;
 
@@ -127,9 +130,11 @@ public class CameraMotor : MonoBehaviour
         if (transition > 1.0f)
         {
             //float dx, dy, dz;
-            //dx = 0.0f;
-            //dy = 0.0f;
+            float sx, sy, sz;
             dz = 0.0f;
+            sx = 0.0f;
+            sy = 0.0f;
+            sz = 0.0f;
             if (fr.w != 0)
             {
                 face_cx = fr.x + fr.w * 0.5f;
@@ -138,17 +143,20 @@ public class CameraMotor : MonoBehaviour
                 dx = (cam_width * 0.5f - face_cx) * pers_ratio.x;
                 dy = (cam_height * 0.5f - face_cy) * pers_ratio.y;
                 dz = (fr.w - face_width) * pers_ratio.z;
+
+                theta = dx * Mathf.PI * 0.5f / (cam_width * 0.2f * pers_ratio.x);
+                phi = dy * Mathf.PI * 0.5f / (cam_height * 0.2f * pers_ratio.y);
+
+
+                sx = rho * Mathf.Cos(phi) * Mathf.Sin(theta);
+                sy = rho * Mathf.Sin(phi);
+                sz = -rho * Mathf.Cos(phi) * Mathf.Cos(theta) + dz * 2.0f;
             }
             //cam_pos.x = moveVector.x + dx;
             //cam_pos.y = moveVector.y + dy;
             //cam_pos.z = moveVector.z + dz;
 
-            theta = dx * Mathf.PI * 0.5f / (cam_width * 0.2f * pers_ratio.x);
-            phi = dy * Mathf.PI * 0.5f / (cam_height * 0.2f * pers_ratio.y);
-            float sx, sy, sz;
-            sx = rho * Mathf.Cos(phi) * Mathf.Sin(theta);
-            sy = rho * Mathf.Sin(phi);
-            sz = -rho * Mathf.Cos(phi) * Mathf.Cos(theta) + dz;
+
 
 
             //cam_pos = moveVector + Quaternion.Euler(lookAt.eulerAngles) * (new Vector3(dx, dy, dz));

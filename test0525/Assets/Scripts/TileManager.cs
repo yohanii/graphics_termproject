@@ -15,12 +15,12 @@ public class TileManager : MonoBehaviour
     private float tileLength = 9.0f;
     private int tile_idx = 0;
 
-    private int amnTilesOnScreen = 7;
+    private int amnTilesOnScreen = 9;
    
 
     private List<GameObject> activeTiles;
     private float safeZone = 21.0f;
-    private int spawn_gap = 3;
+    private int spawn_gap = 5;
     private int lastPrefabIndex = 0;
 
     private Vector3 dir;
@@ -57,6 +57,8 @@ public class TileManager : MonoBehaviour
         for (int i = 0; i < amnTilesOnScreen; i++) {
             if (i < 4)
                 SpawnTile(0);
+            else if (i == 4)
+                SpawnTile(2);
             else
                 SpawnTile();
         }
